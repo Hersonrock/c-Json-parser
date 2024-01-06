@@ -1,0 +1,17 @@
+Jan 05
+
+I'm meditating on the best way to store the parsed data on a structure that C can understand.
+
+The challenges I'm facing is how to handle all the different sizes of objects in JSON. I would like to use an array like structure where I can have a multi-dimentional matrix where each dimention correlated to levels of nesting, but seems like every cell of the matrix needs to be of variable size.
+
+For example JSON lists allow for different datatypes.
+
+#This is a valid list in JSON https://www.rfc-editor.org/rfc/rfc8259 
+#"There is no requirement that the values in an array be of the same type."
+
+["string", 42, true, false, null,{"nested_key": "nested_value"},["array_element_1", "array_element_2"]]
+
+It seems that Linked Lists could solve this problem, reference to objects of any size sounds like exactly what I need.
+And seems that C arrays will be exacly something I wont be able to use, I cannot overcome the limitation of array elements needing to be the same size, nor I can workaround it by using an array of arbitrary size.
+
+
