@@ -1,53 +1,60 @@
-Jan 05
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+	<meta charset="UTF-8">
+	<title> Devlog </title>
+</head>
+<body>
+	<h1>DEVLOG</h1>
+	<h2>Jan 05</h2>
+	<p>
+	I'm meditating on the best way to store the parsed data on a structure that C can understand.
 
-I'm meditating on the best way to store the parsed data on a structure that C can understand.
+	The challenges I'm facing is how to handle all the different sizes of objects in JSON. I would like to use an array like structure where I can have a multi-dimentional matrix where each dimention correlated to levels of nesting, but seems like every cell of the matrix needs to be of variable size.
 
-The challenges I'm facing is how to handle all the different sizes of objects in JSON. I would like to use an array like structure where I can have a multi-dimentional matrix where each dimention correlated to levels of nesting, but seems like every cell of the matrix needs to be of variable size.
+	For example JSON lists allow for different datatypes.
 
-For example JSON lists allow for different datatypes.
+	#This is a valid list in JSON https://www.rfc-editor.org/rfc/rfc8259 
+	#"There is no requirement that the values in an array be of the same type."
 
-#This is a valid list in JSON https://www.rfc-editor.org/rfc/rfc8259 
-#"There is no requirement that the values in an array be of the same type."
+	["string", 42, true, false, null,{"nested_key": "nested_value"},["array_element_1", "array_element_2"]]
 
-["string", 42, true, false, null,{"nested_key": "nested_value"},["array_element_1", "array_element_2"]]
+	It seems that Linked Lists could solve this problem, reference to objects of any size sounds like exactly what I need.
+	And seems that C arrays will be exacly something I wont be able to use, I cannot overcome the limitation of array elements needing to be the same size, nor I can workaround it by using an array of arbitrary size.
+	</p>
+	<h2>Jan 06</h2>
+	<p>
+	Today I started learning about Linked lists, the concept feels really useful and I'm confident I will be able to use them here. The problem I'm seeing is that I would not be exactly sure on how I will handle 1:x linkages. Because so far it seems I can only link elements in a 1:1 ratio. Head-> Tail.
 
-It seems that Linked Lists could solve this problem, reference to objects of any size sounds like exactly what I need.
-And seems that C arrays will be exacly something I wont be able to use, I cannot overcome the limitation of array elements needing to be the same size, nor I can workaround it by using an array of arbitrary size.
+	But in JSON there can be elements that link to two or more elements at the time. 
 
-Jan 06
+	I'm reading about it, and it seems conceptually what I need would be a "Tree" structure, and it makes sense since I need branches that share a common node, but I do not need any other element of the branches to relate to other parallel branches.
 
-Today I started learning about Linked lists, the concept feels really useful and I'm confident I will be able to use them here. The problem I'm seeing is that I would not be exactly sure on how I will handle 1:x linkages. Because so far it seems I can only link elements in a 1:1 ratio. Head-> Tail.
+	After reading more I see myself going into an immense rabbit hole. Because
 
-But in JSON there can be elements that link to two or more elements at the time. 
-
-I'm reading about it, and it seems conceptually what I need would be a "Tree" structure, and it makes sense since I need branches that share a common node, but I do not need any other element of the branches to relate to other parallel branches.
-
-After reading more I see myself going into an immense rabbit hole. Because
-
-1)I need a tree like structure to handle the "levels" or hiearchy of JSON objects.
-2)I need a linked list to handle  arrays with elemenst of different size in JSON.
-2.1) each element in the JSON array cannot only be different sizes but also have arbitrarily differen sizes. For which I had a big problem. I cannot really go ahead an define each posibility with a struct. I need the size of each struct to be defined dinamically at runtime.
-2.1.1) for this I just discovered "void*" or the genereric pointer, it seems exactly what I need so I can refer to nodes in the linked list were the next node is of an unknown size. 
-
-
-Aside from this tree and linked list discussion (Which I have yet to make a proof of concept, this is all still on RAM)
-
-I have a preliminary idea of how I will handle the different values in JSON. These being strings,numbers,object,arrays,literals(true,false,null)
-
-I've settled with strings -> *char, numbers -> doubles(can also handle scientific notation), objects & arrays -> structs(tree, linked list) , literals -> Structs (of fixed size 10 bytes, 4 bytes for an "IsLiteral" int flag* and 6 bytes to store "true","false","null" character arrays) 
-
-*This is so I can differentiate from the string value "true" from the literal "true" 
-
-I believe tomorrow I'll work on making the proof of concept for: 
-
-a) An n-ary tree structure that contains a linked list of pointers* to Heads of linked lists.
-
-* why a linked list for the tree branches? because I want to avoid having to define a set MAX_CHILD per tree node. A node might have tree childs or may have just one. 
-
-b) A child linked list that will use void* to link up nodes of different sizes.
+	1)I need a tree like structure to handle the "levels" or hiearchy of JSON objects.
+	2)I need a linked list to handle  arrays with elemenst of different size in JSON.
+	2.1) each element in the JSON array cannot only be different sizes but also have arbitrarily differen sizes. For which I had a big problem. I cannot really go ahead an define each posibility with a struct. I need the size of each struct to be defined dinamically at runtime.
+	2.1.1) for this I just discovered "void*" or the genereric pointer, it seems exactly what I need so I can refer to nodes in the linked list were the next node is of an unknown size. 
 
 
-I feel there is a shadow lurking of a problem I do not know yet how to approach, how will I exactly lookup key pairs within the linked list? I guess it will be iteratively, but I feel like every programmer ever like I'm thinking it will be "Easy" until I get to actually do it....
+	Aside from this tree and linked list discussion (Which I have yet to make a proof of concept, this is all still on RAM)
 
+	I have a preliminary idea of how I will handle the different values in JSON. These being strings,numbers,object,arrays,literals(true,false,null)
 
+	I've settled with strings -> *char, numbers -> doubles(can also handle scientific notation), objects & arrays -> structs(tree, linked list) , literals -> Structs (of fixed size 10 bytes, 4 bytes for an "IsLiteral" int flag* and 6 bytes to store "true","false","null" character arrays) 
 
+	*This is so I can differentiate from the string value "true" from the literal "true" 
+
+	I believe tomorrow I'll work on making the proof of concept for: 
+
+	a) An n-ary tree structure that contains a linked list of pointers* to Heads of linked lists.
+
+	* why a linked list for the tree branches? because I want to avoid having to define a set MAX_CHILD per tree node. A node might have tree childs or may have just one. 
+
+	b) A child linked list that will use void* to link up nodes of different sizes.
+	
+	I feel there is a shadow lurking of a problem I do not know yet how to approach, how will I exactly lookup key pairs within the linked list? I guess it will be iteratively, but I feel like every programmer ever like I'm thinking it will be "Easy" until I get to actually do it....
+	<p>
+</body>
+</html>
