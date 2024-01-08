@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<time.h>
 
 
 typedef struct node{
@@ -39,12 +40,25 @@ node_t *createChain(int n){
         step = tmp;
 
         for( i = 1 ; i < n; i++){
-                tmp = createNewNode(i);
+                int a = rand() % 100;
+                int r = rand_r(&a) % 100 + 1;
+                tmp = createNewNode(r);
                 step->next = tmp;
                 step = tmp;
         }
 
         return head;
+}
+
+char *stringCreate(){
+        int n = rand() %10 + 1;
+        char *string = (char *)malloc((size_t)n);
+        for(int  i = 0 ; i < n; i++){
+                char c = (char)(rand() %25 + 66);
+                string[i] =  c;
+        }
+        printf("string: %s\n",string);
+        return string;
 }
 
 void freeMemory(node_t *head){
@@ -59,11 +73,12 @@ void freeMemory(node_t *head){
 
 int main(int argc, char *argv[]){
         
+        srand(time(NULL));
         node_t *head;
 
         head = createChain(20);
         printList(head);
         freeMemory(head);
-
+        
         return 0;
-}
+}       
