@@ -4,8 +4,9 @@
 
 
 typedef struct node{
-        int value;
-        struct node *next;
+        char *key;      //8bytes
+        void *value;    //8bytes
+        struct node *next;  //8bytes
 }node_t;
 
 void printList(node_t *head){
@@ -13,16 +14,28 @@ void printList(node_t *head){
         node_t *temp = head;
 
         while( temp !=  NULL){
-                printf("%d->", temp->value);
+                printf("[%s]:", temp->key);
+                printf("[%s]\n", temp->value);
                 temp = temp->next;
         }
-        printf("\n");
 }
 
-node_t *createNewNode(int value){
+char *stringCreate(){
+        int n = rand() %10 + 1;
+        char *string = (char *)malloc((size_t)n);
+        for(int  i = 0 ; i < n-1; i++){
+                int r = rand() %25 +66;
+                string[i] = (char)r ;
+        }
+        string[n-1] = '\0';
+        return string;
+}
+
+node_t *createNewNode(){
 
         node_t *ptr = malloc(sizeof(node_t));
-        ptr->value = value;
+        ptr->key = stringCreate() ;
+        ptr->value = stringCreate();
         ptr->next = NULL;
 
         return ptr;
@@ -35,14 +48,12 @@ node_t *createChain(int n){
 
         int i = 0;
 
-        tmp = createNewNode(i);
+        tmp = createNewNode();
         head = tmp;
         step = tmp;
 
         for( i = 1 ; i < n; i++){
-                int a = rand() % 100;
-                int r = rand_r(&a) % 100 + 1;
-                tmp = createNewNode(r);
+                tmp = createNewNode();
                 step->next = tmp;
                 step = tmp;
         }
@@ -50,16 +61,7 @@ node_t *createChain(int n){
         return head;
 }
 
-char *stringCreate(){
-        int n = rand() %10 + 1;
-        char *string = (char *)malloc((size_t)n);
-        for(int  i = 0 ; i < n; i++){
-                char c = (char)(rand() %25 + 66);
-                string[i] =  c;
-        }
-        printf("string: %s\n",string);
-        return string;
-}
+
 
 void freeMemory(node_t *head){
         node_t *tmp;
@@ -79,6 +81,6 @@ int main(int argc, char *argv[]){
         head = createChain(20);
         printList(head);
         freeMemory(head);
-        
+
         return 0;
 }       
