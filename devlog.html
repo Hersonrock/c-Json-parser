@@ -68,6 +68,12 @@
 	<p>I've practiced a few important concepts like, the use of pointers and utilization of malloc() and free()</p>
 	
 	<p>Next I will be exploring how to dynamically allocate linked lists for nodes of arbitrary sizes. Which should then use the void* pointer type"</p>
+	<h2>Jan 08</h2>
 
+	<p> Today I made progress on the proof of concept, I was able to build a linked list in which each node is a struct which can hold an arbitrarily big string as a key and an arbitrarily big block of memory for values.
+
+	<p> I made the choice for values to be handled by a void pointer as I can make it point to any size block of memory, this way I believe it will allow me to point to other structs,linked lists, strings and doubles which should cover every possible JSON value.
+
+	<p> The next step should be creating a poc for tree. </p>
 </body>
 </html>
