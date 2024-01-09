@@ -75,5 +75,20 @@
 	<p> I made the choice for values to be handled by a void pointer as I can make it point to any size block of memory, this way I believe it will allow me to point to other structs,linked lists, strings and doubles which should cover every possible JSON value.
 
 	<p> The next step should be creating a poc for tree. </p>
+	<h2>Jan 09</h2>
+	<p>Working on the tree structure, now I'm able to create a linked list that refers to other linked lists.</p>
+	<p>I'm honestly not sure if it qualifies as a tree, but I'll keep trying to make it work as is so I can hopefully apply the knowledge to the actual project.</p>
+
+	<p> Currently I'm getting the errors </p> 
+
+	<code>poc_tree.c: In function ‘printObjects’:
+poc_tree.c:111:43: warning: dereferencing ‘void *’ pointer
+  111 |                         while ( head->step->next != NULL){
+      |                                           ^~
+poc_tree.c:111:43: error: request for member ‘next’ in something not a structure or union
+</code>
+
+	The next step is working out if the code can be improved to avoid the warning without having to drop my use of void*
+
 </body>
 </html>
