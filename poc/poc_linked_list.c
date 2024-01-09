@@ -69,6 +69,8 @@ void freeMemory(node_t *head){
         while (head != NULL){
                 tmp = head;
                 head = head-> next;
+                free(tmp->key);
+                free(tmp->value);
                 free(tmp);
         }
 }
