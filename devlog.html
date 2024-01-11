@@ -89,23 +89,21 @@
 		<p>poc_tree.c:111:43: error: request for member ‘next’ in something not a structure or union</p>
 </code>
 
-	The next step is working out if the code can be improved to avoid the warning without having to drop my use of void*
+	The next step is working out if the code can be improved to avoid the warning without having to drop my use of <code>void*</code>.
+
 	<h2> Jan 11 </h2>
 
-	<p> using void pointers is turning out not to be exactly the solution I'm looking for. This is because I think I'm using the void* wrongly, and to make up for it I have to do a lot of typecasting which defeats the purpose</p>
+	<p> Using <code>void*</code> pointers is turning out not to be exactly the solution I'm looking for. This is because I think I'm using the void* wrongly, and to make up for it I have to do a lot of typecasting which defeats the purpose</p>
 
-	<p> Thinking further I was able to restrict my model to two different main structs, which are very similar in size, and I'll handle them with an Union so it is more efficient in memory</p>
+	<p> I was able to restrict my model to two different main structs, which are very similar in size, and I'll handle them with an Union so it is more efficient in memory.</p>
 
-	<p> Further thinking on the actual values of the key value pair that I need to save, I was wrong thinking that I needed to handle the size of a whole JSON object or Array, I just need to handle the pointers to the head structure that I'll set up, so really all the references will be done to structures of known size.</p>
+	<p> I was wrong believing that I needed to handle the size of a whole JSON object or Array, I just need to handle the pointers to the head structure that I'll set up, so really all the references will be done to structures of known size.</p>
 
-	<p> With regards to the values themselves, which are strings,doubles, literals (Not accounting objects and arrays, because those are handled with structs as mentioned above). I'm planning to also get them into an union</p>
+	<p> With regards to the values themselves, which are strings,doubles, literals (Not accounting objects and arrays, because those are handled with structs as mentioned above). I'm planning to also get them into an union.</p>
 
-	<p> I'm not quite sure yet, but I think my worries of having to set a max-size for strings are not well founded, since I will know exactly how big each string value will be at compile time and I can easily malloc() the exact size + 1 to account for '/0'.</p>
+	<p> I'm not quite sure yet, but I think my worries of having to set a max-size for strings are not well founded, since I will know exactly how big each string value will be at runtime and I can easily <code>malloc()</code> the exact size + 1 to account for <code>'/0'</code>.</p>
 
-	<p> So it seems there is a way to get this all working without having to hardcode sizes nor using a void* and a lot of typecasting</p>
-
- 
-
+	<p> So it seems there is a way to get this all working without having to hard-code sizes nor using a <code>void*</code> and a lot of typecasting.
 
 </body>
 </html>
