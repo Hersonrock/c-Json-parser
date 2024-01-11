@@ -81,11 +81,12 @@
 
 	<p> Currently I'm getting the errors </p> 
 
-	<code>poc_tree.c: In function ‘printObjects’:
-poc_tree.c:111:43: warning: dereferencing ‘void *’ pointer
-  111 |                         while ( head->step->next != NULL){
-      |                                           ^~
-poc_tree.c:111:43: error: request for member ‘next’ in something not a structure or union
+	<code>
+		<p>poc_tree.c: In function ‘printObjects’:</p></p>
+		<p>poc_tree.c:111:43: warning: dereferencing ‘void *’ pointer</p>
+  		<p>111 |                         while ( head->step->next != NULL){</p>
+      	<p>|                                           ^~</p>
+		<p>poc_tree.c:111:43: error: request for member ‘next’ in something not a structure or union</p>
 </code>
 
 	The next step is working out if the code can be improved to avoid the warning without having to drop my use of void*
