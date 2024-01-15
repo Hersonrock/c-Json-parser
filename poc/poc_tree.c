@@ -1,22 +1,30 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
+#include<string.h>
+
+union anyNode;
 
 //indexNode(JSON object) will store object keys as well as the pointers to the values
 //or the head of new indexNode (Json Object)
 typedef struct indexNode{
         char *key;
-        void *step;
+        union anyNode *step;
         struct indexNode *next;
 }indexNode_t;
 
 //nodes will store any value 
 //strings, doubles, literals and lists.
 typedef struct node{
-        void *value;    
+        union anyNode *value;    
         struct node *next; 
 }node_t;
 
+union anyNode{
+        indexNode_t *index_u;
+        node_t *node_u;
+        char *value_u;
+};
 //debug function to create random strings of random lenghts
 char *stringCreate(){
         int n = rand() %10 + 1;
@@ -32,7 +40,12 @@ char *stringCreate(){
 node_t *createNode(){
 
         node_t *ptr = malloc(sizeof(node_t));
-        ptr->value = stringCreate();
+        ptr->value = malloc(sizeof(union anyNode));
+
+        char *str = stringCreate();
+        
+        ptr->value->value_u = malloc(sizeof(str));
+        strcpy(ptr->value->value_u, str);
         ptr->next = NULL;
 
         return ptr;
@@ -63,7 +76,8 @@ node_t *createNodeChain(int n){
 indexNode_t *createIndexNode(int n){
         indexNode_t *ptr = malloc(sizeof(indexNode_t));
         ptr->key = stringCreate();
-        ptr->step = createNodeChain(n);
+        ptr->step = malloc(sizeof(union anyNode));
+        ptr->step->node_u = createNodeChain(n);
         ptr->next = NULL;
         return ptr;
 }
@@ -102,17 +116,19 @@ void freeMemory(node_t *head){
 */
 
 void printObjects(indexNode_t *head){
+
+        node_t *tmp = head->step->node_u;
         
         printf("{\n\t");
-        
+         
         while ( head->next != NULL){
-                if ( head->key != NULL && head->step != NULL){
-                        printf("\"%s\":", head->key);
-                        while ( head->step->next != NULL){
-                                printf("[%s],", head->step->value);
-                        }
-                        printf("\n");
+                printf("\"%s\": [", head->key);
+                while( tmp->next != NULL){
+                        printf("%s,", head->step->node_u->value->value_u);
+                        tmp = tmp->next;
                 }
+                printf("]\n");
+                head = head->next;
         }
         printf("}\n");
 
@@ -123,7 +139,7 @@ int main(int argc, char *argv[]){
         srand(time(NULL));
         indexNode_t *head;
 
-        head = createIndexNodeChain(20, 5);
+        head = createIndexNodeChain(6, 4);
         printObjects(head);
 //        freeMemory(head);
 
