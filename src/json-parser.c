@@ -1,6 +1,9 @@
-#include<stdio.h>
+#include<node.h>
 
 int main(int argc, char *argv[]){
-        printf("Hello, Json\n");
+        struct objectNode *head;
+        
+     head = createObjectNodeChain(6, 4);
+
         return 0;
 }

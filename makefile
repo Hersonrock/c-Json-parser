@@ -3,9 +3,12 @@ CFLAGS=-Wall -g
 #----ProgramName----#
 NAME=json-parser
 IDIR=./include
-OBJ=./src/json-parser.o 
+DEP1= node
 
-%.o:%.c 
+DEPS= $(IDIR)/$(DEP1).h 
+OBJ= ./src/json-parser.o ./src/$(DEP1).o
+
+%.o:%.c $(DEPS) 
 	$(CC) -c -o $@ $< $(CFLAGS) -I$(IDIR)
 
 ./bin/$(NAME): $(OBJ)
